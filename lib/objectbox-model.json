@@ -1,0 +1,170 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:6353678830082416211",
+      "lastPropertyId": "11:170528317912568607",
+      "name": "Parking",
+      "properties": [
+        {
+          "id": "1:3240805249438778791",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:6514114126614129246",
+          "name": "nom",
+          "type": 9
+        },
+        {
+          "id": "3:8611324088859550299",
+          "name": "ville",
+          "type": 9
+        },
+        {
+          "id": "4:8586599603996956097",
+          "name": "quartier",
+          "type": 9
+        },
+        {
+          "id": "5:668036000693303221",
+          "name": "desc",
+          "type": 9
+        },
+        {
+          "id": "6:260904586105901875",
+          "name": "imagePath",
+          "type": 9
+        },
+        {
+          "id": "7:4246167857576835913",
+          "name": "timestamps",
+          "type": 6
+        },
+        {
+          "id": "8:8200519022815463402",
+          "name": "placeMoto",
+          "type": 6
+        },
+        {
+          "id": "9:1224817285671122534",
+          "name": "placeVehicule",
+          "type": 6
+        },
+        {
+          "id": "10:6437490815855454325",
+          "name": "latitude",
+          "type": 8
+        },
+        {
+          "id": "11:170528317912568607",
+          "name": "longitude",
+          "type": 8
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:8159907560840296818",
+      "lastPropertyId": "10:3858404288891058867",
+      "name": "Reservation",
+      "properties": [
+        {
+          "id": "1:7280457618503297658",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:4139484730214279951",
+          "name": "nom",
+          "type": 9
+        },
+        {
+          "id": "3:4484068162025723441",
+          "name": "telephone",
+          "type": 9
+        },
+        {
+          "id": "4:4205629253372065724",
+          "name": "duree",
+          "type": 9
+        },
+        {
+          "id": "5:9210468407618631535",
+          "name": "typeVehicule",
+          "type": 9
+        },
+        {
+          "id": "6:5768527659746168254",
+          "name": "placeImmatriculation",
+          "type": 9
+        },
+        {
+          "id": "8:5666839555420576004",
+          "name": "timestamps",
+          "type": 6
+        },
+        {
+          "id": "9:7988282299326621260",
+          "name": "marqueVehicule",
+          "type": 9
+        },
+        {
+          "id": "10:3858404288891058867",
+          "name": "parkingId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "1:1193785123228840842",
+          "relationTarget": "Parking"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:7369281027258120482",
+      "lastPropertyId": "4:8771917880576056011",
+      "name": "User",
+      "properties": [
+        {
+          "id": "1:4298554819078788168",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3390720170181826846",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:6955413346300055504",
+          "name": "email",
+          "type": 9
+        },
+        {
+          "id": "4:8771917880576056011",
+          "name": "password",
+          "type": 9
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "3:7369281027258120482",
+  "lastIndexId": "1:1193785123228840842",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [
+    2238749156609594555
+  ],
+  "retiredRelationUids": [],
+  "version": 1
+}
