@@ -18,7 +18,7 @@ class Accueil extends StatefulWidget {
 
 class _AccueilState extends State<Accueil> {
   List<Parking> parkings = [];
-  Color main_color = const Color.fromARGB(255, 58, 94, 183);
+  Color main_color = const Color(0xFFBDBDBD);
   double latitude = 0;
   double longitude = 0;
 
@@ -147,7 +147,7 @@ class _AccueilState extends State<Accueil> {
                                 // Ville et Quartier
                                 Row(
                                   children: [
-                                    Icon(Icons.location_on, color: main_color),
+                                    Icon(Icons.location_on, color: Color(0xFFBDBDBD)),
                                     const SizedBox(width: 5),
                                     Text(
                                       "${parkings[index].ville}, ${parkings[index].quartier}",
@@ -230,10 +230,10 @@ class _AccueilState extends State<Accueil> {
                                         }
                                       },
                                       icon: Icon(Icons.map_rounded,
-                                          color: main_color),
+                                          color: Color(0xFFBDBDBD)),
                                       label: Text(
                                         "Voir l'adresse",
-                                        style: TextStyle(color: main_color),
+                                        style: TextStyle(color: Color(0xFFBDBDBD)),
                                       ),
                                     ),
                                     ElevatedButton(
@@ -247,7 +247,7 @@ class _AccueilState extends State<Accueil> {
                                                     )));
                                       },
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: main_color,
+                                        backgroundColor: Color(0xFFBDBDBD),
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(12),

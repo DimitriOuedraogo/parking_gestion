@@ -23,7 +23,7 @@ class _PaymentReservationState extends State<PayementReservation> {
   void initState() {
     super.initState();
     otpController = TextEditingController();
-    totalPrice = calculateTotalPrice(widget.reservation.typeVehicule,widget.reservation.duree);
+    totalPrice = calculateTotalPrice(widget.reservation.typeVehicule,widget.reservation.dure);
   }
 
   @override
@@ -41,18 +41,11 @@ Widget build(BuildContext context) {
      appBar: AppBar(
           flexibleSpace: Container(
             decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xffB81736),
-                  Color(0xff281537),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+             color: Colors.green,
             ),
           ),
           title: const Text(
-            "Facture de Reservation",
+            "Facture",
             style: TextStyle(color: Colors.white, fontSize: 28),
           ),
           centerTitle: true,
@@ -83,7 +76,7 @@ Widget build(BuildContext context) {
         style: const TextStyle(    
           fontSize: 28,
           fontWeight: FontWeight.bold,
-          color: Color(0xffB81736), // Couleur personnalisée
+         color: Colors.green, // Couleur personnalisée
         ),
       ),
     ],
@@ -137,13 +130,9 @@ Widget build(BuildContext context) {
                     _buildDetailRow(
                       Icons.timelapse,
                       'Durée de Réservation',
-                      widget.reservation.duree,
+                       widget.reservation.dure,
                     ),
-                    _buildDetailRow(
-                      Icons.tag,
-                      'Plaque d\'Immatriculation',
-                      widget.reservation.placeImmatriculation,
-                    ),
+                  
                   ],
                 ),
               ),
@@ -167,21 +156,21 @@ Widget build(BuildContext context) {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xffB81736),
+                         color: Colors.green,
                       ),
                     ),
                     SizedBox(height: 10),
                     TextField(
                       controller: otpController,
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.lock_outline, color: Color(0xffB81736)),
+                        prefixIcon: Icon(Icons.lock_outline, color: Colors.green),
                         labelText: 'Entrez le code OTP',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(color: Color(0xffB81736), width: 2),
+                          borderSide: BorderSide( color: Colors.green, width: 2),
                         ),
                         errorText: otpController.text.isNotEmpty &&
                                 otpController.text.length < 8
@@ -217,7 +206,7 @@ Widget build(BuildContext context) {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xffB81736),
+                        color: Colors.black,
                       ),
                     ),
                     SizedBox(height: 10),
@@ -238,7 +227,7 @@ Widget build(BuildContext context) {
                       icon: const Icon(Icons.payment),
                       label: Text('Procéder au Paiement'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xffB81736),
+                        backgroundColor: Colors.green,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -265,7 +254,7 @@ Widget _buildDetailRow(IconData icon, String label, String value) {
     padding: EdgeInsets.symmetric(vertical: 8),
     child: Row(
       children: [
-        Icon(icon, color: Color(0xffB81736), size: 24),
+        Icon(icon,  color: Colors.green, size: 24),
         SizedBox(width: 15),
         Expanded(
           child: Column(

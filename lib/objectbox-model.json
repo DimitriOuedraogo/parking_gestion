@@ -69,7 +69,7 @@
     },
     {
       "id": "2:8159907560840296818",
-      "lastPropertyId": "10:3858404288891058867",
+      "lastPropertyId": "14:7709565489407682435",
       "name": "Reservation",
       "properties": [
         {
@@ -91,16 +91,11 @@
         {
           "id": "4:4205629253372065724",
           "name": "duree",
-          "type": 9
+          "type": 6
         },
         {
           "id": "5:9210468407618631535",
           "name": "typeVehicule",
-          "type": 9
-        },
-        {
-          "id": "6:5768527659746168254",
-          "name": "placeImmatriculation",
           "type": 9
         },
         {
@@ -120,6 +115,29 @@
           "flags": 520,
           "indexId": "1:1193785123228840842",
           "relationTarget": "Parking"
+        },
+        {
+          "id": "11:557344799020707193",
+          "name": "startDate",
+          "type": 10
+        },
+        {
+          "id": "12:974400031543486407",
+          "name": "endDate",
+          "type": 10
+        },
+        {
+          "id": "13:8702375513658243965",
+          "name": "userId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "2:837104915571257648",
+          "relationTarget": "User"
+        },
+        {
+          "id": "14:7709565489407682435",
+          "name": "dure",
+          "type": 9
         }
       ],
       "relations": []
@@ -151,19 +169,26 @@
           "type": 9
         }
       ],
-      "relations": []
+      "relations": [
+        {
+          "id": "1:7764471225950029601",
+          "name": "reservations",
+          "targetId": "2:8159907560840296818"
+        }
+      ]
     }
   ],
   "lastEntityId": "3:7369281027258120482",
-  "lastIndexId": "1:1193785123228840842",
-  "lastRelationId": "0:0",
+  "lastIndexId": "2:837104915571257648",
+  "lastRelationId": "1:7764471225950029601",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
   "retiredPropertyUids": [
-    2238749156609594555
+    2238749156609594555,
+    5768527659746168254
   ],
   "retiredRelationUids": [],
   "version": 1

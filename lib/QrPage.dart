@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:projet_parking/home.dart';
 import 'package:projet_parking/model/reservation.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -23,18 +24,11 @@ class QrPage extends StatelessWidget {
       appBar: AppBar(
           flexibleSpace: Container(
             decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xffB81736),
-                  Color(0xff281537),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+               color: Colors.green,
             ),
           ),
           title: const Text(
-            "QR Code de Reservation",
+            "QR Code ",
             style: TextStyle(color: Colors.white, fontSize: 28),
           ),
           centerTitle: true,
@@ -67,10 +61,9 @@ class QrPage extends StatelessWidget {
                     children: [
                       _buildReservationInfo('Nom et prénom', reservation.nom),
                       _buildReservationInfo('Numéro de téléphone', reservation.telephone),
-                      _buildReservationInfo('Durée de réservation', reservation.duree),
+                       _buildReservationInfo('Durée de réservation', reservation.dure),
                       _buildReservationInfo('Type de véhicule', reservation.typeVehicule),
                       _buildReservationInfo('Marque de place', reservation.marqueVehicule),
-                      _buildReservationInfo('Plaque d\'immatriculation', reservation.placeImmatriculation),
                     ],
                   ),
                 ),
@@ -115,7 +108,8 @@ class QrPage extends StatelessWidget {
               // Button for navigation or actions
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.push(context, 
+                  MaterialPageRoute(builder: (context) => const HomePage()));
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),

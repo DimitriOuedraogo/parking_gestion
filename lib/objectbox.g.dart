@@ -91,7 +91,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(2, 8159907560840296818),
       name: 'Reservation',
-      lastPropertyId: const obx_int.IdUid(10, 3858404288891058867),
+      lastPropertyId: const obx_int.IdUid(14, 7709565489407682435),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -112,16 +112,11 @@ final _entities = <obx_int.ModelEntity>[
         obx_int.ModelProperty(
             id: const obx_int.IdUid(4, 4205629253372065724),
             name: 'duree',
-            type: 9,
+            type: 6,
             flags: 0),
         obx_int.ModelProperty(
             id: const obx_int.IdUid(5, 9210468407618631535),
             name: 'typeVehicule',
-            type: 9,
-            flags: 0),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(6, 5768527659746168254),
-            name: 'placeImmatriculation',
             type: 9,
             flags: 0),
         obx_int.ModelProperty(
@@ -140,7 +135,29 @@ final _entities = <obx_int.ModelEntity>[
             type: 11,
             flags: 520,
             indexId: const obx_int.IdUid(1, 1193785123228840842),
-            relationTarget: 'Parking')
+            relationTarget: 'Parking'),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(11, 557344799020707193),
+            name: 'startDate',
+            type: 10,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(12, 974400031543486407),
+            name: 'endDate',
+            type: 10,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(13, 8702375513658243965),
+            name: 'userId',
+            type: 11,
+            flags: 520,
+            indexId: const obx_int.IdUid(2, 837104915571257648),
+            relationTarget: 'User'),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(14, 7709565489407682435),
+            name: 'dure',
+            type: 9,
+            flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[]),
@@ -171,7 +188,12 @@ final _entities = <obx_int.ModelEntity>[
             type: 9,
             flags: 0)
       ],
-      relations: <obx_int.ModelRelation>[],
+      relations: <obx_int.ModelRelation>[
+        obx_int.ModelRelation(
+            id: const obx_int.IdUid(1, 7764471225950029601),
+            name: 'reservations',
+            targetId: const obx_int.IdUid(2, 8159907560840296818))
+      ],
       backlinks: <obx_int.ModelBacklink>[])
 ];
 
@@ -211,12 +233,12 @@ obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
       entities: _entities,
       lastEntityId: const obx_int.IdUid(3, 7369281027258120482),
-      lastIndexId: const obx_int.IdUid(1, 1193785123228840842),
-      lastRelationId: const obx_int.IdUid(0, 0),
+      lastIndexId: const obx_int.IdUid(2, 837104915571257648),
+      lastRelationId: const obx_int.IdUid(1, 7764471225950029601),
       lastSequenceId: const obx_int.IdUid(0, 0),
       retiredEntityUids: const [],
       retiredIndexUids: const [],
-      retiredPropertyUids: const [2238749156609594555],
+      retiredPropertyUids: const [2238749156609594555, 5768527659746168254],
       retiredRelationUids: const [],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
@@ -300,7 +322,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
         }),
     Reservation: obx_int.EntityDefinition<Reservation>(
         model: _entities[1],
-        toOneRelations: (Reservation object) => [object.parking],
+        toOneRelations: (Reservation object) => [object.parking, object.user],
         toManyRelations: (Reservation object) => {},
         getId: (Reservation object) => object.id,
         setId: (Reservation object, int id) {
@@ -309,21 +331,22 @@ obx_int.ModelDefinition getObjectBoxModel() {
         objectToFB: (Reservation object, fb.Builder fbb) {
           final nomOffset = fbb.writeString(object.nom);
           final telephoneOffset = fbb.writeString(object.telephone);
-          final dureeOffset = fbb.writeString(object.duree);
           final typeVehiculeOffset = fbb.writeString(object.typeVehicule);
-          final placeImmatriculationOffset =
-              fbb.writeString(object.placeImmatriculation);
           final marqueVehiculeOffset = fbb.writeString(object.marqueVehicule);
-          fbb.startTable(11);
+          final dureOffset = fbb.writeString(object.dure);
+          fbb.startTable(15);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, nomOffset);
           fbb.addOffset(2, telephoneOffset);
-          fbb.addOffset(3, dureeOffset);
+          fbb.addInt64(3, object.duree);
           fbb.addOffset(4, typeVehiculeOffset);
-          fbb.addOffset(5, placeImmatriculationOffset);
           fbb.addInt64(7, object.timestamps);
           fbb.addOffset(8, marqueVehiculeOffset);
           fbb.addInt64(9, object.parking.targetId);
+          fbb.addInt64(10, object.startDate.millisecondsSinceEpoch);
+          fbb.addInt64(11, object.endDate.millisecondsSinceEpoch);
+          fbb.addInt64(12, object.user.targetId);
+          fbb.addOffset(13, dureOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -334,37 +357,46 @@ obx_int.ModelDefinition getObjectBoxModel() {
               .vTableGet(buffer, rootOffset, 6, '');
           final telephoneParam = const fb.StringReader(asciiOptimization: true)
               .vTableGet(buffer, rootOffset, 8, '');
-          final dureeParam = const fb.StringReader(asciiOptimization: true)
-              .vTableGet(buffer, rootOffset, 10, '');
+          final dureParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 30, '');
+          final dureeParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0);
           final typeVehiculeParam =
               const fb.StringReader(asciiOptimization: true)
                   .vTableGet(buffer, rootOffset, 12, '');
-          final placeImmatriculationParam =
-              const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 14, '');
+          final endDateParam = DateTime.fromMillisecondsSinceEpoch(
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 26, 0));
           final marqueVehiculeParam =
               const fb.StringReader(asciiOptimization: true)
                   .vTableGet(buffer, rootOffset, 20, '');
+          final startDateParam = DateTime.fromMillisecondsSinceEpoch(
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 24, 0));
           final timestampsParam =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 18, 0);
           final object = Reservation(
               nom: nomParam,
               telephone: telephoneParam,
+              dure: dureParam,
               duree: dureeParam,
               typeVehicule: typeVehiculeParam,
-              placeImmatriculation: placeImmatriculationParam,
+              endDate: endDateParam,
               marqueVehicule: marqueVehiculeParam,
+              startDate: startDateParam,
               timestamps: timestampsParam)
             ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
           object.parking.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 22, 0);
           object.parking.attach(store);
+          object.user.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 28, 0);
+          object.user.attach(store);
           return object;
         }),
     User: obx_int.EntityDefinition<User>(
         model: _entities[2],
         toOneRelations: (User object) => [],
-        toManyRelations: (User object) => {},
+        toManyRelations: (User object) =>
+            {obx_int.RelInfo<User>.toMany(1, object.id): object.reservations},
         getId: (User object) => object.id,
         setId: (User object, int id) {
           object.id = id;
@@ -393,7 +425,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final object = User(
               name: nameParam, email: emailParam, password: passwordParam)
             ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
-
+          obx_int.InternalToManyAccess.setRelInfo<User>(object.reservations,
+              store, obx_int.RelInfo<User>.toMany(1, object.id));
           return object;
         })
   };
@@ -468,27 +501,39 @@ class Reservation_ {
 
   /// See [Reservation.duree].
   static final duree =
-      obx.QueryStringProperty<Reservation>(_entities[1].properties[3]);
+      obx.QueryIntegerProperty<Reservation>(_entities[1].properties[3]);
 
   /// See [Reservation.typeVehicule].
   static final typeVehicule =
       obx.QueryStringProperty<Reservation>(_entities[1].properties[4]);
 
-  /// See [Reservation.placeImmatriculation].
-  static final placeImmatriculation =
-      obx.QueryStringProperty<Reservation>(_entities[1].properties[5]);
-
   /// See [Reservation.timestamps].
   static final timestamps =
-      obx.QueryIntegerProperty<Reservation>(_entities[1].properties[6]);
+      obx.QueryIntegerProperty<Reservation>(_entities[1].properties[5]);
 
   /// See [Reservation.marqueVehicule].
   static final marqueVehicule =
-      obx.QueryStringProperty<Reservation>(_entities[1].properties[7]);
+      obx.QueryStringProperty<Reservation>(_entities[1].properties[6]);
 
   /// See [Reservation.parking].
   static final parking =
-      obx.QueryRelationToOne<Reservation, Parking>(_entities[1].properties[8]);
+      obx.QueryRelationToOne<Reservation, Parking>(_entities[1].properties[7]);
+
+  /// See [Reservation.startDate].
+  static final startDate =
+      obx.QueryDateProperty<Reservation>(_entities[1].properties[8]);
+
+  /// See [Reservation.endDate].
+  static final endDate =
+      obx.QueryDateProperty<Reservation>(_entities[1].properties[9]);
+
+  /// See [Reservation.user].
+  static final user =
+      obx.QueryRelationToOne<Reservation, User>(_entities[1].properties[10]);
+
+  /// See [Reservation.dure].
+  static final dure =
+      obx.QueryStringProperty<Reservation>(_entities[1].properties[11]);
 }
 
 /// [User] entity fields to define ObjectBox queries.
@@ -506,4 +551,8 @@ class User_ {
   /// See [User.password].
   static final password =
       obx.QueryStringProperty<User>(_entities[2].properties[3]);
+
+  /// see [User.reservations]
+  static final reservations =
+      obx.QueryRelationToMany<User, Reservation>(_entities[2].relations[0]);
 }

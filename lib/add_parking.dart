@@ -61,6 +61,7 @@ class _AddParkingState extends State<AddParking> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
         appBar: AppBar(
           flexibleSpace: Container(
@@ -377,7 +378,7 @@ class _AddParkingState extends State<AddParking> {
                       style: TextStyle(color: Colors.white, fontSize: 15),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green, // Bouton moderne
+                      backgroundColor: Color(0xFFBDBDBD), // Bouton moderne
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
