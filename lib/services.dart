@@ -43,6 +43,18 @@ class _ServicesState extends State<Services> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+       appBar: AppBar(
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              color: Colors.green,
+            ),
+          ),
+          title: const Text(
+            "Nos Services",
+            style: TextStyle(color: Colors.white, fontSize: 28),
+          ),
+          centerTitle: true,
+        ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:projet_parking/fonction.dart';
+import 'package:projet_parking/home.dart';
 
 import 'db_helper.dart';
 import 'model/parking.dart';
@@ -30,8 +31,9 @@ class _AddParkingState extends State<AddParking> {
   TextEditingController placeNoteController = TextEditingController();
   TextEditingController placeVehiculeController = TextEditingController();
   TextEditingController placeMotoController = TextEditingController();
-   double latitude = 0.0;
+  double latitude = 0.0;
   double longitude = 0.0;
+  bool isDataFetched = false; // Cette variable va gérer l'affichage des champs Pays et Ville
 
 
   final mySnack = SnackBar(
@@ -48,7 +50,7 @@ class _AddParkingState extends State<AddParking> {
             width: 10,
           ),
           Text(
-            "lieu enregistré",
+            "Parking ajouté",
             style: TextStyle(fontSize: 18, color: Colors.black),
           ),
         ],
@@ -63,14 +65,7 @@ class _AddParkingState extends State<AddParking> {
         appBar: AppBar(
           flexibleSpace: Container(
             decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xffB81736),
-                  Color(0xff281537),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              color: Colors.green,
             ),
           ),
           title: const Text(
@@ -89,137 +84,162 @@ class _AddParkingState extends State<AddParking> {
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
               child: ListView(
                 children: [
-                  Row(
+                  Expanded(
+                    child: Container(
+                      margin: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+                      width: 200,
+                      height: 180,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: imageExist
+                          ? ClipRRect(
+                              child: Image.file(
+                                File(imagePath),
+                                fit: BoxFit.cover,
+                              ),
+                              borderRadius: BorderRadius.circular(15),
+                            )
+                          : IconButton(
+                              onPressed: () async {
+                                final image_ = await picker.pickImage(
+                                    source: ImageSource.gallery);
+                                setState(() {
+                                  if (image_ != null) {
+                                    image = image_;
+                                    imagePath = image!.path;
+                                    imageExist = true;
+                                  }
+                                });
+                              },
+                              icon: const Icon(
+                                Icons.add_a_photo,
+                                size: 50,
+                              ),
+                            ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: placeNameController,
+                    decoration: InputDecoration(
+                      label: const Text("Nom"),
+                      filled: true,
+                      fillColor: Colors.grey[200], // Fond doux pour le champ
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: const BorderSide(
+                            width: 1.5,
+                            color: Colors.blueAccent), // Bordure accentuée
+                      ),
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 16.0),
+                      prefixIcon: const Icon(
+                        Icons.business,
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Veuillez entrer le nom";
+                      }
+                      return null;
+                    },
+                  ),
+                                   const SizedBox(height: 10),
+                  ElevatedButton.icon(
+                    onPressed: () async {
+                      Position position = await determinatePosition();
+                      final data = await getCountryAndCityName(
+                          position.latitude, position.longitude);
+
+                      setState(() {
+                        placeVilleController.text = data[0];
+                        placeQuartierController.text = data[1];
+                        latitude = position.latitude;
+                        longitude = position.longitude;
+                        isDataFetched = true;
+                      });
+                    },
+                    icon: const Icon(Icons.place),
+                    label: const Text('obtenir la position',
+                        style: TextStyle(fontSize: 16)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        side: const BorderSide(width: 1, color: Colors.grey),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 105, vertical: 15),
+                    ),
+                  ),
+
+                    const SizedBox(height: 10),
+                   isDataFetched 
+                 ? Row(
                     children: [
+                      // Champ Pays
                       Expanded(
-                        child: Container(
-                          margin: const EdgeInsets.fromLTRB(0, 50, 0, 0),
-                          width: 200,
-                          height: 180,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black),
-                            borderRadius: BorderRadius.circular(15),
+                        child: TextFormField(
+                          controller: placeVilleController,
+                          decoration: InputDecoration(
+                            label: const Text("Pays"),
+                            filled: true,
+                            fillColor: Colors.grey[200],
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: const BorderSide(
+                                  width: 1.5, color: Colors.blueAccent),
+                            ),
+                            contentPadding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
+                            prefixIcon: const Icon(Icons.location_city),
                           ),
-                          child: imageExist
-                              ? ClipRRect(
-                                  child: Image.file(
-                                    File(imagePath),
-                                    fit: BoxFit.cover,
-                                  ),
-                                  borderRadius: BorderRadius.circular(15),
-                                )
-                              : IconButton(
-                                  onPressed: () async {
-                                    final image_ = await picker.pickImage(
-                                        source: ImageSource.gallery);
-                                    setState(() {
-                                      if (image_ != null) {
-                                        image = image_;
-                                        imagePath = image!.path;
-                                        imageExist = true;
-                                      }
-                                    });
-                                  },
-                                  icon: const Icon(
-                                    Icons.add_a_photo,
-                                    size: 50,
-                                  ),
-                                ),
+                          enabled: false,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Veuillez entrer le pays";
+                            }
+                            return null;
+                          },
                         ),
                       ),
-                      const SizedBox(width: 20),
+                      const SizedBox(
+                          width: 5), // Un petit espace entre les deux champs
+                      // Champ Ville
                       Expanded(
-                        child: Column(
-                          children: [
-                            const SizedBox(height: 50),
-                            TextFormField(
-                              controller: placeNameController,
-                              decoration: InputDecoration(
-                                label: const Text("Nom"),
-                                filled: true,
-                                fillColor:
-                                    Colors.grey[200], // Fond doux pour le champ
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: const BorderSide(
-                                      width: 1.5,
-                                      color: Colors
-                                          .blueAccent), // Bordure accentuée
-                                ),
-                                contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 16.0),
-                                prefixIcon: const Icon(
-                                  Icons.business,
-                                ),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Veuillez entrer le nom";
-                                }
-                                return null;
-                              },
+                        child: TextFormField(
+                          controller: placeQuartierController,
+                          decoration: InputDecoration(
+                            label: const Text("Ville"),
+                            filled: true,
+                            fillColor: Colors.grey[200],
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: const BorderSide(
+                                  width: 1.5, color: Colors.blueAccent),
                             ),
-                            const SizedBox(height: 15),
-                            TextFormField(
-                              controller: placeVilleController,
-                              decoration: InputDecoration(
-                                label: const Text("Pays"),
-                                filled: true,
-                                fillColor: Colors.grey[200],
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: const BorderSide(
-                                      width: 1.5,
-                                      color: Colors
-                                          .blueAccent), // Bordure accentuée
-                                ),
-                                contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 16.0),
-                                prefixIcon: const Icon(
-                                  Icons.location_city,
-                                ),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Veuillez entrer le pays";
-                                }
-                                return null;
-                              },
+                            contentPadding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
+                            prefixIcon: const Icon(
+                              Icons.home,
+                              color: Colors.black,
                             ),
-                            const SizedBox(height: 15),
-                            TextFormField(
-                              controller: placeQuartierController,
-                              decoration: InputDecoration(
-                                label: const Text("Ville"),
-                                filled: true,
-                                fillColor: Colors.grey[200],
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: const BorderSide(
-                                      width: 1.5,
-                                      color: Colors
-                                          .blueAccent), // Bordure accentuée
-                                ),
-                                contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 16.0),
-                                prefixIcon: const Icon(
-                                  Icons.home,
-                                  color: Colors.black, // Icône accentuée
-                                ),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Veuillez entrer la ville";
-                                }
-                                return null;
-                              },
-                            ),
-                          ],
+                          ),
+                           enabled: false,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Veuillez entrer la ville";
+                            }
+                            return null;
+                          },
                         ),
                       ),
                     ],
-                  ),
-                  const SizedBox(height: 30),
+                  )
+                  : Container(),
+                  const SizedBox(height: 10),
                   Container(
                     height: 110,
                     decoration: BoxDecoration(
@@ -306,33 +326,7 @@ class _AddParkingState extends State<AddParking> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  ElevatedButton.icon(
-                    onPressed: () async {
-                      Position position = await determinatePosition();
-                      final data = await getCountryAndCityName(
-                          position.latitude, position.longitude);
-
-                      setState(() {
-                        placeVilleController.text = data[0];
-                        placeQuartierController.text = data[1];
-                        latitude = position.latitude;
-                        longitude = position.longitude;
-                      });
-                    },
-                    icon: const Icon(Icons.place),
-                    label: const Text('obtenir la position',
-                        style: TextStyle( fontSize: 16)),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        side: const BorderSide(width: 1, color: Colors.grey),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 105, vertical: 15),
-                    ),
-                  ),
+ 
                   const SizedBox(height: 10),
                   Container(
                     padding: const EdgeInsets.all(16),
@@ -364,14 +358,17 @@ class _AddParkingState extends State<AddParking> {
                             ville: placeVilleController.text,
                             quartier: placeQuartierController.text,
                             placeMoto: int.parse(placeMotoController.text),
-                            placeVehicule:int.parse(placeVehiculeController.text),
+                            placeVehicule:
+                                int.parse(placeVehiculeController.text),
                             desc: placeDescriptionController.text,
                             latitude: latitude,
-                            longitude: longitude );
-                            
+                            longitude: longitude);
+
                         ObjectBox.saveParking(parking);
-                        ScaffoldMessenger.of(context).showSnackBar(mySnack);
-                        Navigator.of(context).pop();
+                       
+                        Navigator.push(context, 
+                        MaterialPageRoute(builder: (context) => HomePage()));
+                       
                       }
                     },
                     icon: const Icon(Icons.save, color: Colors.white),
@@ -384,8 +381,8 @@ class _AddParkingState extends State<AddParking> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 40, vertical: 20),
                     ),
                   ),
                 ],

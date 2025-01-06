@@ -100,12 +100,7 @@ class _RegScreenState extends State<RegScreen> {
             height: double.infinity,
             width: double.infinity,
             decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xffB81736),
-                  Color(0xff281537),
-                ],
-              ),
+              color:Colors.green,
             ),
             child: const Padding(
               padding: EdgeInsets.only(top: 60.0, left: 22),
@@ -148,7 +143,7 @@ class _RegScreenState extends State<RegScreen> {
                               'Nom',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xffB81736),
+                                color: Colors.black,
                               ),
                             ),
                           ),
@@ -171,7 +166,7 @@ class _RegScreenState extends State<RegScreen> {
                               'Email',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xffB81736),
+                                color: Colors.black,
                               ),
                             ),
                           ),
@@ -198,7 +193,7 @@ class _RegScreenState extends State<RegScreen> {
                               'Mot de Passe',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xffB81736),
+                                color: Colors.black,
                               ),
                             ),
                           ),
@@ -223,7 +218,7 @@ class _RegScreenState extends State<RegScreen> {
                               'Confirmer Mot de Passe',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xffB81736),
+                                color: Colors.black,
                               ),
                             ),
                           ),
@@ -244,12 +239,7 @@ class _RegScreenState extends State<RegScreen> {
                             width: 300,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(30),
-                              gradient: const LinearGradient(
-                                colors: [
-                                  Color(0xffB81736),
-                                  Color(0xff281537),
-                                ],
-                              ),
+                             color: Colors.green,
                             ),
                             child: const Center(
                               child: Text(
@@ -257,7 +247,7 @@ class _RegScreenState extends State<RegScreen> {
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20,
-                                  color: Colors.white,
+                                  color: Colors.black,
                                 ),
                               ),
                             ),

@@ -46,6 +46,7 @@ dependencies:
   connectivity_plus: ^6.1.1
   http: ^1.2.2
   map_launcher: ^3.5.0
+  provider: ^6.1.2
   
 
 
@@ -85,7 +86,10 @@ flutter:
      - assets/parking5.jpg
      - assets/parking6.jpg
      - assets/liste.jpg
+     - assets/image_rouge.jpg
+     - assets/unnamed.png
 
+     
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:projet_parking/loginScreen.dart';
-import 'package:projet_parking/model/user.dart';
+import 'package:projet_parking/model/UserProvider.dart';
 import 'package:projet_parking/services.dart';
+import 'package:provider/provider.dart';
 
 import 'Mes_Reservations.dart';
 import 'acceuil.dart';
 import 'add_parking.dart';
 
 class HomePage extends StatefulWidget {
-  final User user;
+  
 
-  const HomePage({Key? key, required this.user}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  late String userName = widget.user.name;
 
-  late String userEmail = widget.user.email;
 
   final List<Widget> pages = [Accueil(), MesReservations(), Services()];
 
@@ -42,49 +41,22 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+    final user = userProvider.currentUser;
+    final String userName = user?.name ?? "nom inconnu";
+    final userEmail = user?.email ?? "Email inconnu";
+
+
+
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xffB81736),
-                Color(0xff281537),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+           color: Colors.green
           ),
         ),
 
-        // ici j'ai afficher l'heure a droite du appBar
-        actions: [
-          StreamBuilder(
-            stream: Stream.periodic(const Duration(seconds: 1), (_) {
-              return DateTime.now();
-            }),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return const SizedBox(); // Affiche rien si les données ne sont pas prêtes
-              }
-              final now = snapshot.data as DateTime;
-              final formattedTime =
-                  "${now.hour.toString().padLeft(2, '0')} h :${now.minute.toString().padLeft(2, '0')}";
-              return Padding(
-                padding: const EdgeInsets.only(right: 30),
-                child: Center(
-                  child: Text(
-                    formattedTime,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-        ],
+     
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(100),
           child: Container(
@@ -99,15 +71,15 @@ class _HomePageState extends State<HomePage> {
                   text: const TextSpan(
                     children: [
                       TextSpan(
-                        text: 'Faso',
+                        text: 'Park',
                         style: TextStyle(
                           fontSize: 30,
                           fontWeight: FontWeight.bold,
-                          color: Colors.blue,
+                          color: Colors.black,
                         ),
                       ),
                       TextSpan(
-                        text: 'Parking',
+                        text: 'Mobile',
                         style: TextStyle(
                           fontSize: 30,
                           fontWeight: FontWeight.bold,
@@ -142,11 +114,11 @@ class _HomePageState extends State<HomePage> {
                         width: 10), // Espacement entre le champ et l'icône
                     Container(
                       decoration: const BoxDecoration(
-                        color: Colors.indigo, // Couleur de fond pour l'icône
+                        color: Colors.white, // Couleur de fond pour l'icône
                         shape: BoxShape.circle,
                       ),
                       child: IconButton(
-                        icon: const Icon(Icons.search, color: Colors.white),
+                        icon: const Icon(Icons.search, color: Colors.grey),
                         onPressed: () {
                           // Action de recherche
                         },
@@ -159,7 +131,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-
       //Ici c'est le menu lateral j'utilise le widget drawer pour le faire
       drawer: Drawer(
         child: Column(
@@ -167,14 +138,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             DrawerHeader(
               decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xffB81736),
-                    Color(0xff281537),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
+                 color:Colors.green,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,7 +149,7 @@ class _HomePageState extends State<HomePage> {
                     backgroundColor: Colors.white,
                     child: IconButton(
                       icon: const Icon(Icons.person,
-                          size: 40, color: Color(0xffB81736)),
+                          size: 40, color:Colors.green,),
                       onPressed: () {
                         showDialog(
                           context: context,
@@ -220,14 +184,14 @@ class _HomePageState extends State<HomePage> {
                     "Bienvenue !",
                     style: TextStyle(fontSize: 20, color: Colors.white),
                   ),
-                  Expanded(child: 
-                   Row(
+                  Expanded(
+                      child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        this.userEmail, // Ton email d'utilisateur
+                        userEmail, // Ton email d'utilisateur
                         style: TextStyle(fontSize: 16, color: Colors.white70),
-                      ),          
+                      ),
                       Expanded(
                         child: Align(
                           alignment: Alignment.bottomRight,
@@ -240,9 +204,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ],
-                  )
-                  ),
-                 
+                  )),
                 ],
               ),
             ),
@@ -259,6 +221,15 @@ class _HomePageState extends State<HomePage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => AddParking()));
+                    },
+                  ),
+                   const Divider(),
+                  ListTile(
+                    leading: const Icon(Icons.storefront, color: Colors.green),
+                    title: const Text("Nos Services"),
+                    onTap: () {
+                      Navigator.push(context, 
+                      MaterialPageRoute(builder: (content)=> Services()));
                     },
                   ),
                   const Divider(),
@@ -299,73 +270,89 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+
       body: pages[pageIndex],
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xffB81736),
-              Color(0xff281537),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: NavigationBar(
-          backgroundColor: Colors.transparent,
-          selectedIndex: pageIndex, // Utiliser pageIndex ici
-          onDestinationSelected: (int index) {
+      
+     floatingActionButton: FloatingActionButton(
+    onPressed: () {
+     
+    },
+    backgroundColor: Colors.green,
+    child: const Icon(Icons.place),
+    tooltip: 'Trouver le parking le plus proche',
+  ),
+  floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+bottomNavigationBar: BottomAppBar(
+  shape: const CircularNotchedRectangle(),
+  notchMargin: 8.0,
+  color: Colors.white,
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      // Icône Accueil avec label
+      Expanded(
+        child: InkWell(
+          onTap: () {
             setState(() {
-              pageIndex =
-                  index; // Mettre à jour le pageIndex lors de la sélection
+              pageIndex = 0;
             });
           },
-          destinations: const [
-            NavigationDestination(
-              icon: Icon(Icons.home, color: Colors.white),
-              label: "Accueil",
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.event, color: Colors.white),
-              label: "Réservations",
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.storefront, color: Colors.white),
-              label: "Nos services",
-            ),
-          ],
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.home,
+                color: pageIndex == 0 ? Colors.green : Colors.grey,
+                size: 28,
+              ),
+              Text(
+                "Accueil",
+                style: TextStyle(
+                  color: pageIndex == 0 ? Colors.green : Colors.grey,
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    );
-  }
-}
+   
+      // Espace pour le bouton flottant
+      const SizedBox(width: 40),
+      // Icône Services avec label
+        // Icône Réservations avec label
+      Expanded(
+        child: InkWell(
+          onTap: () {
+            setState(() {
+              pageIndex = 1;
+            });
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.event,
+                color: pageIndex == 1 ? Colors.green : Colors.grey,
+                size: 28,
+              ),
+              Text(
+                "Réservations",
+                style: TextStyle(
+                  color: pageIndex == 1 ? Colors.green : Colors.grey,
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ],
+  ),
+),
 
-// Méthode pour créer des boutons stylisés
-Widget _buildModernButton(
-  BuildContext context, {
-  required String text,
-  required VoidCallback onPressed,
-  required Color backgroundColor,
-  required IconData icon,
-}) {
-  return SizedBox(
-    width: double.infinity, // S'assurer que le bouton occupe toute la largeur
-    child: ElevatedButton.icon(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        foregroundColor: Colors.white,
-        backgroundColor: backgroundColor,
-        // Couleur du texte
-        padding: EdgeInsets.symmetric(vertical: 14.0),
-        // Padding vertical pour augmenter la taille
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0), // Bords arrondis
-        ),
-        elevation: 5.0, // Ombre légère pour un effet moderne
-      ),
-      icon: Icon(icon, size: 20),
-      label: Text(text,
-          style: TextStyle(fontSize: 18)), // Texte avec une taille plus grande
-    ),
-  );
+);
+  }
 }

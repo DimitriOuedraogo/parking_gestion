@@ -101,5 +101,7 @@ static User? getUserByEmail(String email) {
   return user; // Retourne l'utilisateur ou null s'il n'existe pas
 }
 
+  static void updateUser(User updatedUser) {}
+
 
 }

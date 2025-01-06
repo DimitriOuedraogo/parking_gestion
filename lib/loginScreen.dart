@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:projet_parking/RegScreen.dart';
 import 'package:projet_parking/db_helper.dart';
+import 'package:projet_parking/model/UserProvider.dart';
 import 'package:projet_parking/model/user.dart';
+import 'package:provider/provider.dart';
 
 import 'home.dart';
 
@@ -17,64 +19,28 @@ class _loginScreenState extends State<loginScreen> {
       false; // Variable pour gérer la visibilité du mot de passe
   GlobalKey<FormState> formeKey = GlobalKey<FormState>();
 
-void loginUser(BuildContext context) {
+void loginUser(BuildContext context, String email, String password) {
+  final userProvider = Provider.of<UserProvider>(context, listen: false);
 
+  try {
+    userProvider.loginUser(email, password);
 
-// Permet de verifier que les champs du formulaire sont valides
-  if (!formeKey.currentState!.validate()) {
+    // Navigation vers la page d'accueil
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HomePage(),
+      ),
+    );
+  } catch (e) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Veuillez corriger les erreurs dans le formulaire.'),
+      SnackBar(
+        content: Text(e.toString()),
         duration: Duration(seconds: 2),
       ),
     );
-    return;
   }
-
-  // Vérifier si l'utilisateur existe dans la base de données
-  User? user = ObjectBox.getUserByEmail(emailController.text);
-  if (user == null) {
-    // Aucun utilisateur trouvé
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Aucun utilisateur trouvé avec cet email."),
-        duration: Duration(seconds: 2),
-      ),
-    );
-    return;
-  }
-
-  // Vérifier le mot de passe
-  if (user.password != passwordController.text) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Mot de passe incorrect."),
-        duration: Duration(seconds: 2),
-      ),
-    );
-    return;
-  }
-
-  // Connexion réussie
-  ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(
-      content: Text("Connexion réussie !"),
-      duration: Duration(seconds: 2),
-    ),
-  );
-
-  // Naviguer vers la page d'accueil
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(
-      builder: (context) => HomePage(
-        user: user,
-      ),
-    ),
-  );
 }
-
-
 
 
   @override
@@ -87,12 +53,7 @@ void loginUser(BuildContext context) {
             height: double.infinity,
             width: double.infinity,
             decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xffB81736),
-                  Color(0xff281537),
-                ],
-              ),
+              color: Colors.green,
             ),
             child: const Padding(
               padding: EdgeInsets.only(top: 60.0, left: 22),
@@ -122,7 +83,7 @@ void loginUser(BuildContext context) {
                   child: Form(
                     key: formeKey,
                     child: ListView(
-                      // Remplacer Column par ListView
+                      // ListView
                       children: [
                         TextFormField(
                           controller: emailController,
@@ -135,7 +96,7 @@ void loginUser(BuildContext context) {
                               'Email',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xffB81736),
+                                color: Colors.black,
                               ),
                             ),
                           ),
@@ -174,7 +135,7 @@ void loginUser(BuildContext context) {
                               'Mot de Passe',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xffB81736),
+                                color: Colors.black,
                               ),
                             ),
                           ),
@@ -194,29 +155,19 @@ void loginUser(BuildContext context) {
                           width: 300,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
-                            gradient: const LinearGradient(
-                              colors: [
-                                Color(0xffB81736),
-                                Color(0xff281537),
-                              ],
-                            ),
+                            color:Colors.green ,
                           ),
                           child: GestureDetector(
                             onTap: () {
                               print("connexion");
-                              loginUser(context);
+                              loginUser(context,emailController.text,passwordController.text);
                             },
                             child: Container(
                               height: 55,
                               width: 300,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(30),
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    Color(0xffB81736),
-                                    Color(0xff281537),
-                                  ],
-                                ),
+                                color:Colors.green,
                               ),
                               child: const Center(
                                 child: Text(
@@ -224,7 +175,7 @@ void loginUser(BuildContext context) {
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20,
-                                    color: Colors.white,
+                                    color: Colors.black,
                                   ),
                                 ),
                               ),
